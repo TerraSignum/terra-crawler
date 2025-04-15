@@ -1,0 +1,9 @@
+flask
+requests
+schedule
+joblib
+scikit-learn
+pandas
+matplotlib
+folium
+gunicorn
