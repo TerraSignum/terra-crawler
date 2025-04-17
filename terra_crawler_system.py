@@ -1,6 +1,5 @@
 # Meta-Crawler Kern mit Logging, Zeitplan, Live-Übersicht, KI-Modell und Deployment-Start
-app = Flask(__name__)
-app.secret_key = 'terrasignum_secret'
+from flask import Flask, request, render_template_string, redirect, url_for, session, jsonify, Response
 import os
 import logging
 import time
@@ -10,8 +9,10 @@ import requests
 import sqlite3
 import schedule
 import threading
-from datetime import datetime
-from flask import Flask, request, render_template_string, redirect, url_for, session, request, render_template_string
+from datetime import datetime, timedelta
+
+app = Flask(__name__)
+app.secret_key = 'terrasignum_secret'
 
 meta_sources = {
     "USGS": {
