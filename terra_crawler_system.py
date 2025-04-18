@@ -575,7 +575,7 @@ def meta_crawler_run(project_id, override_source=None):
     sorted_sources = [s for s, _ in relevance_order] if relevance_order else list(meta_sources.keys())
     logging.info(f"Starte Meta-Crawler für Projekt {project_id}")
     active_sources = get_active_sources(project_id)
-            for name in sorted_sources:
+    for name in sorted_sources:
         if override_source and name != override_source:
             continue
         config = meta_sources.get(name)
@@ -646,7 +646,7 @@ def start_meta_crawler_scheduler(project_id):
                 meta_crawler_run(pid)
 
     schedule.every(30).seconds.do(schedule_project_sources)
-    logging.info(f"Scheduler gestartet für Projekt {project_id} alle {interval_minutes} Minuten.")
+    logging.info(f"Scheduler gestartet für Projekt {project_id} alle 30 Sekunden.")
     def run_scheduler():
         logging.info("Meta-Crawler-Scheduler läuft...")
         while True:
