@@ -71,22 +71,14 @@ def logout():
 def project_source_toggle(project_id):
     with sqlite3.connect(DB_NAME) as conn:
         conn.execute('''CREATE TABLE IF NOT EXISTS project_sources (
-                            project_id TEXT,
-                            source TEXT,
-                            active INTEGER DEFAULT 1,
-                            priority INTEGER DEFAULT 0,
-                            interval_seconds INTEGER DEFAULT 300,
-                            last_run TEXT,
-                            backoff_until TEXT
-                            project_id TEXT,
-                            source TEXT,
-                            active INTEGER DEFAULT 1,
-                            priority INTEGER DEFAULT 0,
-                            interval_seconds INTEGER DEFAULT 300
-                            project_id TEXT,
-                            source TEXT,
-                            active INTEGER DEFAULT 1
-                        )''')
+    project_id TEXT,
+    source TEXT,
+    active INTEGER DEFAULT 1,
+    priority INTEGER DEFAULT 0,
+    interval_seconds INTEGER DEFAULT 300,
+    last_run TEXT,
+    backoff_until TEXT
+)''')
         conn.commit()
         if request.method == "POST":
             for source in meta_sources.keys():
@@ -523,7 +515,6 @@ def log_crawl(project_id, source, status, trigger_type="auto"):
     rows.append([project_id, source, datetime.utcnow().isoformat(), status, trigger_type])
     with open(CRAWL_LOG_PATH, 'w', newline='') as f:
         writer = csv.writer(f)
-        writer = csv.writer(f)
         writer.writerows(rows)
 
 def get_active_sources(project_id):
@@ -658,7 +649,7 @@ def start_all_project_schedulers(interval_minutes=5):
     with sqlite3.connect("terrasignum_data.db") as conn:
         project_ids = [row[0] for row in conn.execute("SELECT DISTINCT project_id FROM project_entries")]
     for pid in project_ids:
-        start_meta_crawler_scheduler(pid, interval_minutes)
+        start_meta_crawler_scheduler(pid)
     logging.info(f"Scheduler für alle {len(project_ids)} Projekte gestartet.")
 
 # Parser-Beispiel
