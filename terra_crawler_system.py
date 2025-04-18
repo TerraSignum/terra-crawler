@@ -1,6 +1,5 @@
 # Meta-Crawler Kern mit Logging, Zeitplan, Live-Übersicht, KI-Modell und Deployment-Start
-app = Flask(__name__)
-app.secret_key = 'terrasignum_secret'
+from flask import Flask, request, render_template_string, redirect, url_for, session, jsonify, Response
 import os
 import logging
 import time
@@ -10,8 +9,27 @@ import requests
 import sqlite3
 import schedule
 import threading
-from datetime import datetime
-from flask import Flask, request, render_template_string, redirect, url_for, session, request, render_template_string
+from datetime import datetime, timedelta
+import folium
+from folium.plugins import HeatMap
+
+# App-Instanz
+app = Flask(__name__)
+app.secret_key = 'terrasignum_secret'
+
+# Datenbank- und Pfad-Konfiguration
+db_path = 'terrasignum_data.db'
+DB_NAME = db_path
+STATIC = 'static'
+CRAWL_LOG_PATH = os.path.join(STATIC, 'crawl_schedule.csv')
+# Verzeichnisse und Log-Datei sicherstellen
+os.makedirs(STATIC, exist_ok=True)
+if not os.path.exists(CRAWL_LOG_PATH):
+    with open(CRAWL_LOG_PATH, 'w', newline='') as f:
+        csv.writer(f).writerow(["project_id", "source", "last_run", "status"])
+
+# Logging-Setup
+logging.basicConfig(filename='meta_crawler.log', level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 meta_sources = {
     "USGS": {
